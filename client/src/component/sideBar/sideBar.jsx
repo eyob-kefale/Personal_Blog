@@ -1,29 +1,48 @@
 import './sideBar.css'
 import image1 from "../../image/job.jpg"
+import { useEffect, useState } from 'react'
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+
 
 
 export default function sideBar() {
+    const [cats, setCat] = useState([]);
+
+    useEffect(() => {
+        const getCat = async () => {
+            const res = await axios.get("/categories")
+            setCat(res.data)
+
+        }
+        getCat();
+
+    }, [])
+
+
+
     return (
-        
-            <div className='sideBar'>
-                <div className="sideBarItem">
-                    <span className="sideBarTitle">ABOUT ME</span>
-                    <img
-                        className='sideBarImg'
-                        src={image1}
-                        alt='eyob' />
-                    <p>Lorem ipsum dolor sit amet consectetur</p>
-                </div>
-                <div className="sideBarItem">
+
+        <div className='sideBar'>
+            <div className="sideBarItem">
+                <span className="sideBarTitle">ABOUT ME</span>
+                <img
+                    className='sideBarImg'
+                    src={image1}
+                    alt='eyob' />
+                <p>Lorem ipsum dolor sit amet consectetur</p>
+            </div>
+            <div className="sideBarItem">
                 <span className="sideBarTitle">CATAGORIES</span>
                 <ul className="sideBarList">
-                    <li className='sideBarListItem'>Life</li>
-                    <li className='sideBarListItem'>Style</li>
-                    <li className='sideBarListItem'>sport</li>
-                    <li className='sideBarListItem'>peace</li>
-                    <li className='sideBarListItem'>Love</li>
+                    {cats.map((c) => (
+                        <Link to={`/?cat=${c.name}`} className="link">
+                            <li className='sideBarListItem'>{c.name}</li>
+                        </Link>
+                    ))}
+
                 </ul>
-                </div>
+            </div>
             <div className="sideBarItem">
                 <span className="sideBarTitle">FOLLOW ME</span>
                 <div className="sideBarSocial">
@@ -33,7 +52,7 @@ export default function sideBar() {
                     <i className="sideBarIcon icon fa-brands fa-telegram"></i>
                 </div>
             </div>
-            </div>
-        
+        </div>
+
     )
 }

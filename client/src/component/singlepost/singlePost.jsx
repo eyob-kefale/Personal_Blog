@@ -1,18 +1,42 @@
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
+import { Link } from 'react-router-dom';
 import './singlePost.css'
 
 
+
 export default function singlePost() {
+  const location=useLocation();
+  const path=location.pathname.split("/")[2];
+  const [post, setPost]=useState({})
+
+
+  useEffect(()=>{
+    const getPost=async()=>{
+      const res=await axios.get("/posts/"+path)
+     setPost(res.data);
+     console.log(res.data)
+    }
+    getPost()
+  },[path]);
+
+
+
+
   return (
     <div className='singlePost'>
         <div className="singlePostWrapper">
-        <img
-                className='singlePostImg'
-                src='https://media.istockphoto.com/id/519162052/photo/fast-coding.jpg?s=612x612&w=0&k=20&c=GQYnIlkFJve_XQlRjZX5klclnJuwZ-6esZwuLQkqcGQ='
-                alt='React'
-            />
+        {post.photo &&(
+          <img
+                  className='singlePostImg'
+                  src={post.photo}
+                  alt='React'
+              />
+        ) }
 
           <h1 className="singlePostTitle">
-            Lorem ipsum, dolor sit amet 
+            {post.title}
             <div className="singlePostEdit">
             <i className="singlePostIcon fa-solid fa-pen-to-square"></i>
             <i className="singlePostIcon fa-solid fa-trash-can"></i>
@@ -20,19 +44,15 @@ export default function singlePost() {
           </h1>
        
         <div className="singlePostInfo">
-          <span className="singlePostAuthor">Author: <b>Eyob</b></span>
-          <span className="singlePostDate">1 hour ago</span>
+          <span className="singlePostAuthor">Author: 
+          <Link to={`/?user=${post.userName}`} className="link">
+          <b>{post.userName}</b>
+          </Link>
+          </span>
+          <span className="singlePostDate">{new Date(post.createdAt).toDateString()}</span>
         </div>
         <p className='singlePostDesc'>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
-          Incidunt iure ratione ut error officiis beatae esse! Ratione quo qui, 
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
-          Incidunt iure ratione ut error officiis beatae esse! Ratione quo qui,
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
-          Incidunt iure ratione ut error officiis beatae esse! Ratione quo qui, 
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
-          Incidunt iure ratione ut error officiis beatae esse! Ratione quo qui, 
-     
+          {post.desc}
         </p>
         </div>
         </div>
